@@ -2,6 +2,8 @@ import React from "react";
 import Parser from "rss-parser";
 import Article from "./(components)/Article";
 
+export const revalidate = 10;
+
 const Page = async () => {
   const parser = new Parser({
     customFields: {
