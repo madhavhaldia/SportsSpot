@@ -2,9 +2,7 @@ import React from "react";
 import Parser from "rss-parser";
 import Article from "./(components)/Article";
 
-type Props = {};
-
-const Page = async (props: Props) => {
+const Page = async () => {
   const parser = new Parser({
     customFields: {
       item: ["media:content"],
@@ -16,13 +14,15 @@ const Page = async (props: Props) => {
     link: item.link,
     author: item.creator,
     description: item.contentSnippet,
-    pubDate: new Date(item.pubDate),
+    pubDate: new Date(item.pubDate || ""),
     category: item.categories,
     guid: item.guid,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     imageSrc: item["media:content"]["$"].url,
   }));
-  const getTitleFontSize = (title) => {
-    const titleLength = title.length;
+  const getTitleFontSize = (title: string | any[] | undefined) => {
+    const titleLength = title?.length;
+    if (!titleLength) return;
     if (titleLength > 60) {
       return "text-2xl md:text-3xl lg:text-4xl xl:text-5xl ";
     } else if (titleLength > 40) {
@@ -47,7 +47,8 @@ const Page = async (props: Props) => {
           className="relative overflow-hidden bg-cover bg-no-repeat"
           style={{
             backgroundPosition: "50%",
-            backgroundImage: `url('${articles[0]?.imageSrc}')`,
+            // eslint-disable-next-line  @typescript-eslint/restrict-template-expressions
+            backgroundImage: `url('${articles[0]?.imageSrc || " "}')`,
             height: "500px",
           }}
         >
@@ -58,6 +59,7 @@ const Page = async (props: Props) => {
             <div className="flex h-full items-center justify-center">
               <div className="max-w-[800px] px-6 py-12 text-left text-white md:px-12 md:py-0">
                 <h2
+                  // eslint-disable-next-line  @typescript-eslint/restrict-template-expressions
                   className={`mb-4 ${titleFontSize} font-bold leading-tight tracking-tight`}
                 >
                   <a href={articles[0]?.link}>{articles[0]?.title}</a>
@@ -69,25 +71,10 @@ const Page = async (props: Props) => {
                     {articles[0]?.author}
                   </p>
                   <div className="flex flex-wrap">
-                    {articles[0]?.category.map((category, index) => (
+                    {articles[0]?.category?.map((category, index) => (
                       <span
                         key={index}
-                        className={`mb-2 mr-2 rounded-full px-2 py-1 text-xs ${() => {
-                          switch (category) {
-                            case "Basketball":
-                              return "bg-blue-500";
-                            case "Cricket":
-                              return "bg-green-500";
-                            case "Football":
-                              return "bg-red-500";
-                            case "Golf":
-                              return "bg-yellow-500";
-                            case "Tennis":
-                              return "bg-purple-500";
-                            default:
-                              return "bg-gray-500";
-                          }
-                        }} bg-gray-200 font-medium text-gray-800`}
+                        className={`mb-2 mr-2 rounded-full bg-gray-200 px-2 py-1  text-xs font-medium text-gray-800`}
                       >
                         {category}
                       </span>

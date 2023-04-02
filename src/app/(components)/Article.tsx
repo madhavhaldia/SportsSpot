@@ -1,8 +1,18 @@
 import React from "react";
 
-type Props = {};
-
-const Article = ({ item }: any) => {
+const Article = ({
+  item,
+}: {
+  item: {
+    title: string | undefined;
+    link: string | undefined;
+    imageSrc: string | undefined;
+    author: string | undefined;
+    description: string | undefined;
+    category: string[] | undefined;
+    pubDate: Date | undefined;
+  };
+}) => {
   return (
     <article className="mb-6 flex flex-wrap">
       <div className="mb-6 ml-auto w-full shrink-0 grow-0 basis-auto px-3 md:mb-0 md:w-3/12">
@@ -36,13 +46,9 @@ const Article = ({ item }: any) => {
         <p className="mb-6 text-gray-500">
           <small>
             Published{" "}
-            <u>{`${
-              item.pubDate.getDate() +
-              "-" +
-              item.pubDate.getMonth() +
-              "-" +
-              item.pubDate.getFullYear()
-            }`}</u>{" "}
+            <u>{`${item.pubDate?.getDate().toString() || " "}-${
+              item.pubDate?.getMonth().toString() || " "
+            }-${item.pubDate?.getFullYear().toString() || " "}`}</u>{" "}
             by
             <a href="" className="text-gray-900">
               {" "}
